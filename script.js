@@ -96,8 +96,9 @@ function showTop10(listTop10) {
     listTop10.forEach((item, i) => {
         cards += `
             <div class="list-top10"
-            data-id="${item.id}"
-            data.type="${item.media_type || "movie"}">
+                data-id="${item.id}"
+                data-type="${item.media_type || "movie"}">
+
                 <img src="https://image.tmdb.org/t/p/w300${item.poster_path}" class="img-slide-bottom">
 
                 <span class="classRank">
@@ -106,7 +107,7 @@ function showTop10(listTop10) {
             </div>
         `;
     })
-    
+
     carouselNavigation("#container-top10", cards);
 }
 
@@ -119,7 +120,10 @@ function showPopular(listPopular) {
 
     listPopular.forEach(moviePopular => {
         cards += `
-        <div class="list-popular">
+        <div class="list-popular"
+            data-id="${moviePopular.id}"
+            data-type="movie">
+            
             <img src="https://image.tmdb.org/t/p/w300${moviePopular.poster_path}" class="img-slide-bottom">
         </div>
         `
@@ -142,6 +146,9 @@ function showExtensiveMovies(extensive) {
 
         const card = document.createElement("div");
         card.classList.add("list-extensive");
+
+        card.dataset.id = movies.id;
+        card.dataset.type = "movie";
 
         card.innerHTML = `
             <img src="https://image.tmdb.org/t/p/w300${movies.poster_path}" class="img-slide-bottom">
@@ -274,7 +281,7 @@ btnResult.addEventListener("click", async () => {
         const search = await searchMovieName(name);
         result = await filterGenre(search, genreId);
     } else if (name) {
-        reuslt = await searchMovieName(name);
+        result = await searchMovieName(name);
     } else if (genreId) {
         result = await SearchGenre(genreId);
     } else {
@@ -318,30 +325,33 @@ document.addEventListener("click", (e) => {
 async function getTrailerFilm(movieId, type = "movie") {
     const data = await structureApiTMDB(`/${type}/${movieId}/videos?language=pt-BR`);
 
-    return data.result.find(video => {
-        video.type === "Trailer" && video.site === "Youtube";
-    })
+    return data.results.find(video => video.type === "Trailer" && video.site === "YouTube");
+}
+
+async function getInformationFilm(movieId, type = "movie") {
+    return await structureApiTMDB(`/${type}/${movieId}?language=pt-BR`);
 }
 
 async function openModal(movie) {
     const modal = document.querySelector("#modal-trailer");
     const trailerModal = document.querySelector("#trailer");
-    const titleModal = document.querySelector("#modal-title");
-    const genreModal = document.querySelector("#modal-genre");
-    const sinopseModal = document.querySelector("#modal-overview");
+
+    const titleModal = document.querySelector(".modal-title");
+    const genreModal = document.querySelector(".modal-genre");
+    const sinopseModal = document.querySelector(".modal-overview");
 
     const type = movie.media_type || "movie";
 
     const trailer = await getTrailerFilm(movie.id, type);
-    const information = await getTrailerFilm(movie.id, type);
+    const information = await getInformationFilm(movie.id, type);
 
-    if(trailer) {
+    if (trailer) {
         trailerModal.src = `https://www.youtube.com/embed/${trailer.key}`;
     } else {
         trailerModal.src = "";
     }
 
-    titleModal.textContent =information.title || information.name;
+    titleModal.textContent = information.title || information.name;
     genreModal.textContent = information.genres.map(g => g.name).join(", ");
     sinopseModal.textContent = information.overview;
 
@@ -355,6 +365,22 @@ document.querySelector("#fechar-modal").addEventListener("click", () => {
     trailerModal.src = "";
     modal.classList.remove("active");
 })
+
+document.addEventListener("click", async (e) => {
+    const card = e.target.closest(
+        ".list-top10, .list-popular, .list-extensive"
+    );
+
+    if (!card) return;
+
+    const movieId = card.dataset.id;
+    const type = card.dataset.type;
+
+    openModal({
+        id: movieId,
+        media_type: type
+    });
+});
 
 async function LoadPage() {
 

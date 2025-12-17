@@ -62,8 +62,7 @@
                 <div id="content-film">
                     <h2 class="title-film">
                         </h1>
-                        <button id="btn-view-trailer">Ver trailer</button>
-                        <h2 id="overview-film"></h2>
+                        <h2 id="overview-film">Visão Geral</h2>
                         <p class="description-film"></p>
                 </div>
             </div>
@@ -90,6 +89,34 @@
         </div>
 
     </main>
+
+    <div id="modal-trailer">
+        <div id="modal-content">
+            <div id="header-modal">
+                <li class="item-header-logo">
+                    <figure>
+                        <img src="images/logo-project-api-tmdb.png" alt="logo-api-tmdb" id="img-logo-api-tmdb">
+                        <figcaption>logo-api-tmdb</figcaption>
+                    </figure>
+
+                    <p id="logo-api-tmdb">PD Case Cinema</p>
+                </li>
+                <button id="fechar-modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <iframe id="trailer" frameborder="0" allow="autoplay; 
+            encrypted-media" allowfullscreen>
+            </iframe>
+
+            <div id="detalhe-film">
+                <h2 class="modal-title"></h2>
+                <p class="modal-genre"></p>
+                <p class="modal-overview"></p>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
