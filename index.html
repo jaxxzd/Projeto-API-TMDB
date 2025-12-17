@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <title>PD Case Cinema</title>
+</head>
+
+<body>
+    <header id="header-tmdb">
+        <nav id="nav-bar">
+            <ul id="list-item">
+                <a href="index.html">
+                    <li class="item-header-logo">
+                        <figure>
+                            <img src="images/logo-project-api-tmdb.png" alt="logo-api-tmdb" id="img-logo-api-tmdb">
+                            <figcaption>logo-api-tmdb</figcaption>
+                        </figure>
+
+                        <p id="logo-api-tmdb">PD Case Cinema</p>
+                    </li>
+                </a>
+
+                <div id="container-header-right">
+
+                    <div id="genre-dropdown">
+                        <div id="genre-title">
+                            <span id="genre-label">Gêneros</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+
+                        <ul id="genre-menu">
+
+                        </ul>
+                    </div>
+
+                    <li class="item-header-input">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Busque por nome, gênero... " id="input-field-tmdb"
+                            autocomplete="off">
+                    </li>
+
+                    <li class="item-buscar">
+                        <button id="btn-search">Buscar</button>
+                    </li>
+                </div>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-tmdb">
+        <div id="section-hero">
+            <div id="container-content-film">
+                <img src="" class="img-poster-film">
+
+                <div id="content-film">
+                    <h2 class="title-film">
+                        </h1>
+                        <button id="btn-view-trailer">Ver trailer</button>
+                        <h2 id="overview-film"></h2>
+                        <p class="description-film"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <h2 id="title-container-top10"></h2>
+
+            <div id="container-top10">
+                <!--Conteúdo com slide mostrando os top 10 em filmes -->
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <h2 id="title-container-popular"></h2>
+
+            <div id="container-popular">
+                <!-- Conteúdo com slide mostrando filmes populares -->
+            </div>
+        </div>
+
+        <div id="container-extensive">
+            <!-- Conteúdo extensivo mostrando 20 filmes juntos em um só -->
+        </div>
+
+    </main>
+
+    <div id="modal-trailer">
+        <div class="modal-conntent">
+            <div id="header-modal">
+                <button id="fechar-modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <iframe id="trailer" frameborder="0" allow="autoplay; 
+            encrypted-media" allowfullscreen>
+            </iframe>
+
+            <h2 id="modal-title"></h2>
+            <p id="modal-genre"></p>
+            <p id="modal-overview"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
