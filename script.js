@@ -22,7 +22,7 @@ async function searchMovieName(name) { // função assíncrona para buscar o nom
 }
 
 async function getGenre() { // função assíncrona que busca o gênero do filme
-    const data = await structureApiTMDB(`/genre/movie/list?language=pt-BR`); // espera da função "structureApiTMDB" carregar o endpoint que pega a lista de gênero do filme em português
+    const data = await structureApiTMDB(`/genre/movie/list?language=pt-BR`); // espera da função "structureApiTMDB" carregar o endpoint que pega a lista de gênero do filme em português brasileiro
     return data.genres; // retorna o "data" com a palavra chave "genres" do json da API
 }
 
@@ -33,7 +33,7 @@ async function SearchGenre(genreId) { // função assíncrona pra receber como p
 }
 
 async function getSectionHero() { // função assíncrona para criar a seção de destaque de filmes e séries
-    const data = await structureApiTMDB(`/trending/all/week?language=pt-BR`); // espera da função "structureApiTMDB" que carrega filmes populares da semana com linguagem em português
+    const data = await structureApiTMDB(`/trending/all/week?language=pt-BR`); // espera da função "structureApiTMDB" que carrega filmes populares da semana com linguagem português brasileiro
 
     return data.results.filter(item => // filtragem da lista de filmes com parâmetro "item", buscando imagem vertical, imagem horizontal e sinopse do filme
         item.poster_path &&
@@ -42,17 +42,17 @@ async function getSectionHero() { // função assíncrona para criar a seção d
     );
 }
 
-async function getTop10() { // função para buscar filmes e séries populares do dia
+async function getTop10() { // função assíncrona para buscar filmes e séries populares do dia
     const data = await structureApiTMDB(`/trending/all/day`); // espera da função "structureApiTMDB" para carregar o endpoint que recebe as tendências do dia
     return data.results.slice(0, 10); // retorna lista de filmes que estão em tendências, criando um limite de 10 filmes no array de 0 a 10
 }
 
-async function getPopular() {// função para buscar filmes populares
+async function getPopular() {// função assíncrona para buscar filmes populares
     const data = await structureApiTMDB(`/movie/popular`); // espera da função "structureApiTMDB" para carregar o endpoint que pega os filmes populares
     return data.results.slice(0, 15); // retorna lista de filmes que estão entre os mais populares, com limite de 15 filmes no array, de 0 a 15
 }
 
-async function getMovies() { // função para pegar filmes para conhecer
+async function getMovies() { // função assíncrona para pegar filmes para conhecer
     const data = await structureApiTMDB(`/discover/movie?sort_by=popularity.desc`); // espera da função "structureApiTMDB" para carregar o endpoint que pega os filmes com nível de popularidade, aparecendo em ordem decrescente, aparecendo os filmes mais bem avaliados primeiro
     return data.results.slice(0, 20); // retorna lista de filmes para descoberta, com limite de 20 filmes no array, de 0 a 20
 }
@@ -82,7 +82,7 @@ function conteudoSectionHero(movie) { // função para criar  o conteúdo da se�
     description.textContent = movie.overview; // sinopse do filme
 }
 
-async function loadSectionHero() { // função pra renderizar o filme na seção hero
+async function loadSectionHero() { // função assíncrona pra renderizar o filme na seção hero
     const movies = await getSectionHero(); // espera dados da função "getSectionHero" e coloca na variável "movies"
 
     if (!movies.length) return; // verificação para ver se não tem nenhum filme
@@ -212,7 +212,7 @@ let timeout; // guarda Id do setTimeout pra fazer debouncer
 inputResult.addEventListener("input", () => { // adição de evento para pesquisa parcial
     clearTimeout(timeout); // cancela o setTimeout anterior pra não fazer várias chamadas enquanto digita
 
-    timeout = setTimeout(async () => { // só faz a ação se o usuário parar de digitar por 2 segundos
+    timeout = setTimeout(async () => { // só faz a operação assíncrona se o usuário parar de digitar por 1.5 segundos
 
         // coloca valor digitado na variável "value"
         const value = inputResult.value.trim();
@@ -231,11 +231,11 @@ inputResult.addEventListener("input", () => { // adição de evento para pesquis
         searchToResult(); // chamada da função pra levar a usuário até os resultados da pesquisa
 
         searchInputResult(filtragem); // carrega os filmes filtrados na tela
-    }, 2000);
+    }, 1500);
 });
 
 function searchInputResult(movie) { // função pra mostrar na tela os resultados buscaods no input
-    const container = document.querySelector("#container-extensive"); 
+    const container = document.querySelector("#container-extensive");
     container.innerHTML = ""; // limpa a cada chamada, pra não acumular
 
     if (movie.length === 0) { // se a busca não tiver nenhum filme, mostra na tela que não foi encontrado e retorna
@@ -260,6 +260,9 @@ function searchInputResult(movie) { // função pra mostrar na tela os resultado
         const card = document.createElement("div");
         card.classList.add("list-extensive");
 
+        card.dataset.id = movies.id;
+        card.dataset.type = movies.media_type || "movie";
+
         // coloca na tela o card com a imagem do pôster
         card.innerHTML = `
         <img src="https://image.tmdb.org/t/p/w300${movies.poster_path}" class="img-slide-bottom">
@@ -275,7 +278,7 @@ function searchInputResult(movie) { // função pra mostrar na tela os resultado
     container.appendChild(containerGrid);
 }
 
-async function searchDropGenre() { // função pra pegar gêneros de filme e colocar no dropdown
+async function searchDropGenre() { // função assíncrona pra pegar gêneros de filme e colocar no dropdown
     const genres = await getGenre(); // aguarda a requisição com o nome dos gêneros em um array
     const genreDropDown = document.querySelector("#genre-menu"); // seletor que receberá os nomes dos gêneros
 
@@ -290,72 +293,75 @@ async function searchDropGenre() { // função pra pegar gêneros de filme e col
     });
 }
 
-function filterGenre(movieNames, genreId) { // função que retorna um novo array tendo os filmes que fazem parte do gênero
+function filterGenre(movieNames, genreId) { // função que retorna um novo array tendo os filmes que fazem parte do gênero buscado
     return movieNames.filter(movieName => movieName.genre_ids.includes(Number(genreId))
     );
+
 }
 
-btnResult.addEventListener("click", async () => {
-    const name = inputResult.value.trim();
-    const genreId = genreIdSelected;
+btnResult.addEventListener("click", async () => { // Evento de botão pra selecionar o tipo de busca com async, pra aguardar requisição de cada função
+    const name = inputResult.value.trim(); // recebe o nome do filme pelo Input sem espaços extras
+    const genreId = genreIdSelected; // recebe o gênero selecionado no dropdown
 
-    let result = [];
+    let result = []; // array vazio, pra depois ser atualizado com os dados do filme
 
-    if (name && genreId) {
-        const search = await searchMovieName(name);
-        result = await filterGenre(search, genreId);
-    } else if (name) {
-        result = await searchMovieName(name);
-    } else if (genreId) {
-        result = await SearchGenre(genreId);
-    } else {
+    // verificação para cada tipo de busca
+    if (name && genreId) { // se tiver algo digitado e o gênero for selecionado, executa:
+        const search = await searchMovieName(name); // aguarda a requisição da função "searchMovieName", com o valor do input passado como parâmetro, pra pegar o filme digitado no endpoint da função
+        result = await filterGenre(search, genreId); // aguarda a requisição da função "filterGenre", com valores de parâmetro para filtrar o gênero de acordo com o array do filme (search)
+    } else if (genreId) { // se for passado somente o gênero no dropdown, executa:
+        result = await SearchGenre(genreId); // aguarda a requisição da função "SearchGenre", procurando o gênero que foi passado no dropdown (genreId)
+    } else { // se não tiver nada, retorna
         return;
     }
 
-    searchToResult();
+    searchToResult(); // função pra levar até o container "#container-extensive", onde tem os resultados de pesquisa
 
-    searchInputResult(result);
+    searchInputResult(result);  // recebe esses resultados pra aparecer na tela
 });
 
+// Seletores pra criar o Modal
 const dropdown = document.querySelector("#genre-dropdown");
 const genreLabel = document.querySelector("#genre-label");
 const btnGenreOpen = document.querySelector("#genre-title");
 const menuGenreOpen = document.querySelector("#genre-menu");
 
-btnGenreOpen.addEventListener("click", () => {
-    menuGenreOpen.classList.toggle("active");
-    dropdown.classList.toggle("open");
+btnGenreOpen.addEventListener("click", () => { // evento no botão de ao clicar executa a função
+    menuGenreOpen.classList.toggle("active"); // faz a alternância de adicionar e remover a classe "active" do menu de gêneros
+    dropdown.classList.toggle("open"); // faz a alternância de classe adicionando e removendo no dropdown
 })
 
-menuGenreOpen.addEventListener("click", (e) => {
-    if (e.target.tagName === "LI") {
-        genreIdSelected = e.target.dataset.genreId;
+menuGenreOpen.addEventListener("click", (e) => { // adição de evento com parãmetro na arrow function
+    if (e.target.tagName === "LI") { // verifica se a tag "li" foi clicada
+        genreIdSelected = e.target.dataset.genreId; // armazenada o "li" clicado com o número do id como atributo na variável "genreIdSelected"
 
-        genreLabel.textContent = e.target.textContent;
+        genreLabel.textContent = e.target.textContent; // atualiza a texto do botão com o nome do gênero clicado (feedback pro usuário)
 
+        menuGenreOpen.classList.remove("active"); // Quando for clicado na "li" dispara a remoção do menu de gênero
+        dropdown.classList.remove("open"); // Quando for clicado na "li" dispara a remoção do dropdown inteiro
+    }
+});
+
+document.addEventListener("click", (e) => { // arrow function pra quando clicar fora do menu, fehca o dropdown
+    if (!dropdown.contains(e.target)) { // verifica se o elemento clicado (e.target) foi o dropdown, se não foi, fecha menu e dropdown
         menuGenreOpen.classList.remove("active");
         dropdown.classList.remove("open");
     }
 });
 
-document.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target)) {
-        menuGenreOpen.classList.remove("active");
-        dropdown.classList.remove("open");
-    }
-});
+async function getTrailerFilm(movieId, type = "movie") { // Função assíncrona pra pegar o trailer do filme ou série na API, usando a transmissão do Youtube em português brasileiro, com parãmetros pra receber o Id do filme e o seu tipo, se não for passado nada no "type" o valor fica "movie"
+    const data = await structureApiTMDB(`/${type}/${movieId}/videos`); // espera da função "structureApiTMDB" pra fazer a requisição do endpoint que carrega o trailer
 
-async function getTrailerFilm(movieId, type = "movie") {
-    const data = await structureApiTMDB(`/${type}/${movieId}/videos?language=pt-BR`);
-
-    return data.results.find(video => video.type === "Trailer" && video.site === "YouTube");
+    return data.results.find(video => video.type === "Trailer" && video.site === "YouTube"); // metodo "find" no array que carrega os dados do Trailer do filme ou série. Esse método vai em busca de encontrar o primeiro array que seguir as condições 
 }
 
-async function getInformationFilm(movieId, type = "movie") {
-    return await structureApiTMDB(`/${type}/${movieId}?language=pt-BR`);
+async function getInformationFilm(movieId, type = "movie") { // função assíncrona que busca detalhes do filme como título, gênero, sinopse e etc...
+    return await structureApiTMDB(`/${type}/${movieId}?language=pt-BR`); // aguarda a requisição da função "structureApiTMDB", que dentro dos parênteses é passado o endpoint que busca detalhes do filme em português brasileiro
 }
 
-async function openModal(movie) {
+async function openModal(movie) { // função assíncrona pra criar o modal, com parâmetro "movie" pra receber um objeto com Id e tipo do filme
+
+    // seletores pra criar o modal
     const modal = document.querySelector("#modal-trailer");
     const trailerModal = document.querySelector("#trailer");
 
@@ -363,49 +369,50 @@ async function openModal(movie) {
     const genreModal = document.querySelector(".modal-genre");
     const sinopseModal = document.querySelector(".modal-overview");
 
+    // fallback se caso o filme não existir "media_type" 
     const type = movie.media_type || "movie";
 
-    const trailer = await getTrailerFilm(movie.id, type);
-    const information = await getInformationFilm(movie.id, type);
+    const trailer = await getTrailerFilm(movie.id, type); // espera da função "getTrailerFilm" pra renderizar o id do filme e o seu tipo na variável "trailer"
+    const information = await getInformationFilm(movie.id, type); // espera da função "getInformationFilm" pra receber os dados como título, gênero, sinopse e etc...
 
-    if (trailer) {
+    if (trailer) { // verificação se o trailer existe, se existir, então exibe o trailer do youtube
         trailerModal.src = `https://www.youtube.com/embed/${trailer.key}`;
-    } else {
+    } else { // se não tiver trailer o source fica vazio
         trailerModal.src = "";
     }
 
-    titleModal.textContent = information.title || information.name;
-    genreModal.textContent = information.genres.map(g => g.name).join(", ");
-    sinopseModal.textContent = information.overview;
+    titleModal.textContent = information.title || information.name; // coloca o nome do filme no seletor "modal-title"
+    genreModal.textContent = information.genres.map(g => g.name).join(", "); // faz o mapeamento dos gêneros e coloca em um array, depois coloca os gêneros com vírgula para separação e então exibe na tela através do seletor "modal-genre"
+    sinopseModal.textContent = information.overview; // mostra a sinopse do filme no modal, através do seletor "modal-overview"
 
-    modal.classList.add("active");
+    modal.classList.add("active"); // adição da classe "active" para o modal aparecer
 }
 
-document.querySelector("#fechar-modal").addEventListener("click", () => {
+document.querySelector("#fechar-modal").addEventListener("click", () => { // arrow function para fechar o modal quando clicar no "X"
     const modal = document.querySelector("#modal-trailer");
     const trailerModal = document.querySelector("#trailer");
 
-    trailerModal.src = "";
-    modal.classList.remove("active");
+    trailerModal.src = ""; // remove trailer do modal
+    modal.classList.remove("active"); // remove a classe "active" que faz aparecer o modal
 })
 
-document.addEventListener("click", async (e) => {
-    const card = e.target.closest(
+document.addEventListener("click", async (e) => { // escuta todos os cliques feitos na página
+    const card = e.target.closest(  // variável "card" recebe o alvo clicado com verificação do "closest" se o clique foi no card do top 10, popular e extensive
         ".list-top10, .list-popular, .list-extensive"
     );
 
-    if (!card) return;
+    if (!card) return; // verifica se o alvo não foi o card, se não for, retorna
 
-    const movieId = card.dataset.id;
-    const type = card.dataset.type;
+    const movieId = card.dataset.id; // variável "movieId" recebe atributo HTML invísivel pra informar id 
+    const type = card.dataset.type;  // variável "type" recebe atributo HTML invísivel pra informar o tipo (movie, tv, person etc...)
 
-    openModal({
+    openModal({ // função "OpenModal" recebe valor de "id" e "tipo" ao seus parãmetros, para buscar trailer, pegar informações do filme e joga na tela
         id: movieId,
         media_type: type
     });
 });
 
-async function LoadPage() {
+async function LoadPage() { // Carregamento da página
 
     await loadSectionHero();
 
