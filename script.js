@@ -290,11 +290,10 @@ async function searchDropGenre() { // função pra pegar gêneros de filme e col
     });
 }
 
-function filterGenre(movieNames, genreId) { 
+function filterGenre(movieNames, genreId) { // função que retorna um novo array tendo os filmes que fazem parte do gênero
     return movieNames.filter(movieName => movieName.genre_ids.includes(Number(genreId))
     );
 }
-
 
 btnResult.addEventListener("click", async () => {
     const name = inputResult.value.trim();
