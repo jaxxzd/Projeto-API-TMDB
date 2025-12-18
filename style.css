@@ -526,7 +526,6 @@ figcaption {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 667px;
-    height: 610px;
     display: none;
     background-color: #313131;
     overflow: auto;
@@ -566,6 +565,7 @@ figcaption {
 #trailer {
     width: 100%;
     height: 350px;
+    aspect-ratio: 16 / 8;
 }
 
 #details-film {
